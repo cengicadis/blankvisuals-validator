@@ -1,0 +1,3 @@
+# Local / IDE — never part of FW-001 releases (see .gitignore)
+.vscode/
+.DS_Store

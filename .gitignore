@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+Thumbs.db
+# Ignore local overrides only (committed: .vscode/settings.json with project defaults)
+.vscode/*.code-workspace
+.vscode/launch.json
