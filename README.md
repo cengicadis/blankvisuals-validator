@@ -1,12 +1,11 @@
 # BlankVisuals© Validator
 
-Evidence-backed validation for AI-built **agentic** and **orchestration** frameworks (Cursor skills, hooks, subagents, MCP, SDK automation, plugins).
+Evidence-backed validation framework for AI agents, Cursor skills, MCP orchestrations, subagent graphs, hooks, and agentic repos — before deployment, not after.
 
 | Field | Value |
 |-------|-------|
 | **Framework ID** | `FW-001` |
 | **Full name** | `BlankVisuals© Validator` |
-| **Author** | Adis Čengić \| Principal Designer · Creative Direction · Integrated Brand & Product Architecture. |
 | **Version** | `v1.0.2` |
 | **Date registered** | `2026-05-20` |
 | **Domain package** | `cursor-skills` |
@@ -15,7 +14,7 @@ Evidence-backed validation for AI-built **agentic** and **orchestration** framew
 
 ## What it does
 
-**BlankVisuals© Validator** is a **Cursor Agent Skill**.
+**BlankVisuals© Validator** is an open-source AI agent validation framework built as a **Cursor** Agent Skill.
 
 When invoked, the agent:
 
@@ -34,7 +33,7 @@ It does **not** guess pass/fail. Unverified items are marked `INCONCLUSIVE`, not
 Clone or copy this folder into your Cursor skills directory:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/blankvisuals-validator ~/.cursor/skills/blankvisuals-validator
+git clone https://github.com/cengicadis/blankvisuals-validator ~/.cursor/skills/blankvisuals-validator
 ```
 
 Cursor loads skills from `~/.cursor/skills/` automatically when the skill description matches your request.
@@ -97,7 +96,9 @@ blankvisuals-validator/
 
 ## Targets in scope
 
-Validate agents and repos that use:
+Validate any AI agent, prompt workflow, or agentic repo against a structured rule catalog with verified evidence per finding.
+
+Supported targets:
 
 - Skill chains (`SKILL.md`, skill frontmatter)
 - Hook pipelines (`hooks.json`)
@@ -143,4 +144,4 @@ MIT — see [LICENSE](LICENSE). Free to use, modify, and distribute with attribu
 
 ## Attribution
 
-[BlankVisuals©](https://www.blankvisuals.com) Validator · Framework `FW-001` · registered `2026-05-20`.
+BlankVisuals© Validator · Framework `FW-001` · registered `2026-05-20`.
