@@ -1,6 +1,7 @@
-# BlankVisuals© Validator
+<img width="1280" height="640" alt="Image" src="https://github.com/user-attachments/assets/c4c5bf70-d349-4288-9598-741c236623de" />
 
-Evidence-backed validation framework for AI agents, Cursor skills, MCP orchestrations, subagent graphs, hooks, and agentic repos — before deployment, not after.
+# BlankVisuals© Validator
+#### Evidence-backed validation framework for AI agents, Cursor skills, MCP orchestrations, subagent graphs, hooks, and agentic repos — before deployment, not after.
 
 | Field | Value |
 |-------|-------|
