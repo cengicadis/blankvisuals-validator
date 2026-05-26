@@ -63,6 +63,7 @@ Commit `SKILL.md`, `reference.md`, and `.gitignore` with your project if the tea
 2. In chat, ask for validation, for example:
    - *"Run BlankVisuals validator on this repo"*
    - *"Validate this agent against FW-001"*
+   - *"Validate this MCP orchestration against FW-001"*
    - *`/validate` this orchestration workflow*
 3. Review the **canvas** (`canvases/blankvisuals-validation-<target>.canvas.tsx`) and the chat summary.
 
