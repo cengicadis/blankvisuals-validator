@@ -78,6 +78,19 @@ The agent stamps **framework meta** (FW-001) at the start and sets **validation 
 | [SKILL.md](SKILL.md) | Agent orchestration workflow (for the skill itself) |
 | [reference.md](reference.md) | Full rule catalog (STR, TOP, CON, SEC, RUN, …) |
 
+## Wiki
+
+Full documentation available on the [GitHub Wiki](https://github.com/cengicadis/blankvisuals-validator/wiki):
+
+| Page | What you'll find |
+|------|-----------------|
+| [Getting Started](https://github.com/cengicadis/blankvisuals-validator/wiki/Getting-Started) | Install, first run, example prompts |
+| [How It Works](https://github.com/cengicadis/blankvisuals-validator/wiki/How-It-Works) | Architecture, six domains, evidence standard |
+| [Rule Catalog](https://github.com/cengicadis/blankvisuals-validator/wiki/Rule-Catalog) | Every rule with check, pass, and fail conditions |
+| [Framework Types](https://github.com/cengicadis/blankvisuals-validator/wiki/Framework-Types) | How to classify your target |
+| [Custom Rules](https://github.com/cengicadis/blankvisuals-validator/wiki/Custom-Rules) | VALIDATION.md format and examples |
+| [Troubleshooting](https://github.com/cengicadis/blankvisuals-validator/wiki/Troubleshooting) | Common issues and fixes |
+
 ## Repository layout
 
 ```text
