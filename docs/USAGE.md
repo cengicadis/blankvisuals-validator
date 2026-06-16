@@ -184,6 +184,9 @@ verify: npm run validate
 
 When `Source` or `Domain package` are set here, they override `cursor-skills` in framework meta for that run.
 
+For a fuller real-world spec, see
+[OpenClaw social tool plugin validation](examples/tweetclaw-openclaw-validation.md).
+
 ## Framework types
 
 Classify the target before deep checks (multiple tags allowed):
