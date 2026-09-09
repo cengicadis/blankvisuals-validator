@@ -14,6 +14,10 @@
 
 **Validation confirmation:** ISO-8601 UTC `confirmed_at` + method `precise & verify` + `framework_id: FW-001` — recorded only after all evidence is collected.
 
+**Important:** All checks are **read-only**. No commands are executed. Verification is done by inspecting files and documentation.
+
+---
+
 ## Framework taxonomy
 
 Classify the **target** (agent/repo) before applying rules. Multiple tags allowed.
@@ -27,6 +31,8 @@ Classify the **target** (agent/repo) before applying rules. Multiple tags allowe
 | **sdk-automation** | `@cursor/sdk`, `Agent.create`, CI agents | CON-SDK, RUN-SDK, SEC-03 |
 | **heuristic-workflow** | Prompt-only plans, checklists, no hard contracts | TOP-HEU, OBS-*, DISC-HEU |
 | **plugin-marketplace** | `.cursor-plugin`, manifest, component metadata | STR-PLG, CON-PLG |
+
+---
 
 ## Rule catalog
 
@@ -48,7 +54,7 @@ Each rule: **check**, **pass**, **fail**. All findings include `framework_id: FW
 | STR-02 | Skill/hook paths not under `skills-cursor/` | User/project paths only | Writes or docs point to reserved dir |
 | STR-03 | One canonical orchestration doc | Single `AGENTS.md` or equivalent names primary flow | Conflicting primary docs with no precedence |
 | STR-SKL | Each skill has `name` + `description` in frontmatter | Valid YAML, description has WHAT+WHEN | Missing, >1024 char desc, or vague description |
-| STR-HOOK | hooks.json schema and script paths | Valid JSON; scripts exist and executable | Broken refs or invalid event keys |
+| STR-HOOK | hooks.json schema and script paths | Valid JSON; scripts exist and are readable | Broken refs or invalid event keys |
 | STR-PLG | Plugin manifest paths | Manifest validates; components discoverable | Broken discovery or invalid manifest |
 
 ### Topology (TOP)
@@ -102,15 +108,15 @@ Each rule: **check**, **pass**, **fail**. All findings include `framework_id: FW
 | OBS-02 | Output paths | Reports/logs written to documented dirs | Ad-hoc paths only in chat |
 | OBS-03 | Error surfacing | Failures include context and next action | Swallowed errors or generic "failed" |
 
-### Runtime (RUN)
+### Runtime (RUN) – read-only checks only
 
 | ID | Check | Pass | Fail |
 |----|-------|------|------|
-| RUN-01 | Documented verify command | Command run; exit 0 | Missing script or non-zero exit |
-| RUN-02 | Lint/typecheck if project has them | Same as RUN-01 for project's standard check | Skipped when `package.json`/Makefile defines check |
-| RUN-HOOK | Hook dry-run or test | Hook fires on sample event without throw | Hook crashes or mutates prod unintentionally |
-| RUN-MCP | Smoke MCP tool | One read-only tool succeeds | Server unreachable or schema mismatch |
-| RUN-SDK | SDK example or test | Example compiles or test passes | Broken sample in docs |
+| RUN-01 | Verify script exists and is documented | `scripts/verify.sh` exists and has clear purpose | Missing or undocumented verify script |
+| RUN-02 | Lint/typecheck configuration exists | If project has `package.json` with lint script, it is documented | Lint config missing when expected |
+| RUN-HOOK | Hook script is present and safe | Hook file exists; no dangerous operations (e.g., `rm -rf`, curl to unknown) | Hook missing or contains unsafe patterns |
+| RUN-MCP | MCP tool descriptor and schema | Descriptor exists; schema is valid and documented | Descriptor missing or invalid schema |
+| RUN-SDK | SDK usage matches documentation | Imports and API calls match SDK surface | References to removed or renamed APIs |
 
 ### Discovery (DISC)
 
@@ -118,6 +124,8 @@ Each rule: **check**, **pass**, **fail**. All findings include `framework_id: FW
 |----|-------|------|------|
 | DISC-SKL | Skill descriptions third-person + triggers | Matches create-skill conventions | First-person or no WHEN clause |
 | DISC-HEU | Ambiguity handling | Unknown type → ask or INCONCLUSIVE | Invented rules without user/repo source |
+
+---
 
 ## Severity
 
@@ -129,7 +137,11 @@ Each rule: **check**, **pass**, **fail**. All findings include `framework_id: FW
 
 **Overall PASS:** zero critical and major FAIL. Minor FAILs → PASS with warnings in canvas.
 
-## Repo spec override format
+---
+
+## Repo spec override format (informational only)
+
+The validator uses **built-in rules only**. The following format is for documentation purposes and is **not loaded** by the validator.
 
 ```markdown
 ## Framework
@@ -143,23 +155,22 @@ type: skill-chain | ...
   check: ...
   pass: ...
   fail: ...
-
-## Commands
-verify: npm run validate
 ```
 
-Repo `Source` / `Domain package` values override `cursor-skills` in framework meta when set.
+Repo `Source` / `Domain package` values override `cursor-skills` in framework meta when set (informational only).
+
+------
 
 ## Subagent prompts (templates)
 
-**Structure explorer**
+### Structure explorer
 
-> Target built on FW-001. Explore [repo_root] for entrypoints (skills, hooks, AGENTS.md, MCP, SDK). Return: framework_type, entrypoints[], gaps vs STR-01/STR-03. Evidence only.
+> Target built on FW-001. Explore [repo_root] for entrypoints (skills, hooks, AGENTS.md, MCP, SDK). Return: framework_type, entrypoints[], gaps vs STR-01/STR-03. Evidence only. **Read files only – do not execute anything.**
 
-**Security explorer**
+### Security explorer
 
-> Scan SEC-01/SEC-02/SEC-03. Return paths + excerpts. No PASS without evidence.
+> Scan SEC-01/SEC-02/SEC-03. Return paths + excerpts. No PASS without evidence. **Read files only – do not execute anything.**
 
-**Runtime shell**
+### Runtime inspector
 
-> Run documented verify commands (read-only). Exit codes + last 30 lines. Map to RUN-*.
+> Inspect verify script and documentation for RUN rules. Check existence and safety of scripts, lint configurations, hooks, MCP descriptors, and SDK usage. **Read files only – do not execute anything.** Return findings with file citations.
