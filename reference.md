@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | `FW-001` |
 | **Full name** | BlankVisuals© Validator |
-| **Version** | `v1.0.2` |
+| **Version** | `v1.0.3` |
 | **Source** | `blankvisuals-validator` |
 | **Date registered** | `2026-05-20` |
 | **Domain package** | `cursor-skills` |
@@ -135,7 +135,7 @@ Each rule: **check**, **pass**, **fail**. All findings include `framework_id: FW
 ## Framework
 id: FW-001
 name: BlankVisuals© Validator
-version: v1.0.2
+version: v1.0.3
 type: skill-chain | ...
 
 ## Rules
