@@ -1,4 +1,3 @@
-```markdown
 # Contributing to BlankVisuals© Validator
 
 Contributions that improve coverage, accuracy, and usability are welcome.
@@ -51,6 +50,19 @@ Real-world repo specs (anonymized if needed) that show how teams extend FW-001 f
 
 Major version changes require an open issue and discussion before implementation.
 
+## Security guidelines for contributors
+
+This validator enforces a strict **read-only policy** to ensure safe operation. All contributions must respect these rules:
+
+- **No command execution** – The agent never runs shell commands, scripts, or binaries. All checks are performed by reading files and inspecting content.
+- **No file writes** – The validator never creates, modifies, or deletes files. Results are delivered only in the chat.
+- **No external resources** – All rules, references, and catalogs must be bundled within the repository. Do not add links to external URLs (especially `https://`) as rule sources.
+- **No sensitive file access** – The validator reads only `SKILL.md` and `VALIDATION.md` (if present). It never reads `.env`, credentials, `AGENTS.md`, `CLAUDE.md`, or any configuration files that may contain secrets.
+- **Evidence standard** – All findings must be backed by **verified evidence** (file path + line range + excerpt). Unverified items are marked `INCONCLUSIVE`, never `PASS`.
+- **Version consistency** – When bumping the version, update all files: `SKILL.md`, `reference.md`, `README.md`, `docs/USAGE.md`, and `VALIDATION.md`.
+
+Any contribution that violates these principles will be rejected.
+
 ## Attribution
 
 All contributors are credited in release notes.
@@ -58,4 +70,3 @@ All contributors are credited in release notes.
 ---
 
 BlankVisuals© Validator · Framework `FW-001` · MIT License
-```
