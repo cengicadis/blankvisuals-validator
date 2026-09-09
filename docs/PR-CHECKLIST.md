@@ -1,4 +1,4 @@
-# PR checklist — v1.0.2
+# PR checklist — v1.0.3
 
 Use this before merging any branch into `main`.
 
@@ -39,4 +39,4 @@ Must **not** contain `editor.cursorSmoothCaretAnimation` or `editor.cursorStyle`
 
 ## After merge
 
-Confirm on GitHub: **Code** → branch **main** → latest commit contains version tag `v1.0.2`.
+Confirm on GitHub: **Code** → branch **main** → latest commit contains version tag `v1.0.3`.
