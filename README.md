@@ -7,7 +7,7 @@
 |-------|-------|
 | **Framework ID** | `FW-001` |
 | **Full name** | `BlankVisuals© Validator` |
-| **Version** | `v1.0.2` |
+| **Version** | `v1.0.3` |
 | **Date registered** | `2026-05-20` |
 | **Domain package** | `cursor-skills` |
 | **Method** | `precise & verify` — every rule needs verified evidence or `INCONCLUSIVE` |
@@ -151,7 +151,7 @@ Format and examples: [docs/USAGE.md#custom-validation-rules](docs/USAGE.md#custo
 
 ## Versioning
 
-Bump the patch version on each release (`1.0.0` → `1.0.1` → `1.0.2` → …) in `SKILL.md`, `reference.md`, `README.md`, `docs/USAGE.md`, and `VALIDATION.md`. See [CHANGELOG.md](CHANGELOG.md).
+Bump the patch version on each release (`1.0.0` → `1.0.1` → `1.0.2` → `1.0.3` …) in `SKILL.md`, `reference.md`, `README.md`, `docs/USAGE.md`, and `VALIDATION.md`.
 
 ## License
 
