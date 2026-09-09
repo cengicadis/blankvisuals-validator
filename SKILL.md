@@ -1,23 +1,22 @@
 ---
 name: blankvisuals-validator
-description: Runs BlankVisuals© Validator (FW-001 v1.0.2) — evidence-backed validation for AI-built agentic and orchestration frameworks. Use when validating agents built on this framework, framework conformance, BlankVisuals validator, or when the user explicitly mentions "BlankVisuals validator", "/validate", or "framework validation". Do NOT activate on general mentions of "orchestrator" without validation context.
+description: Runs BlankVisuals© Validator (FW-001 v1.0.3) — evidence-backed validation for AI-built agentic frameworks. Use when validating agents, framework conformance, or when the user explicitly mentions "BlankVisuals validator", "/validate", or "framework validation". Do NOT activate on general mentions of "orchestrator" without validation context.
 ---
 
 # BlankVisuals© Validator
 
 ## Framework meta (required on every run)
 
-Emit this block at the start of discovery and repeat it in the canvas header and chat summary:
+Emit this block at the start of discovery and repeat it in the chat summary:
 
 | Field | Value |
 |-------|-------|
 | **ID** | `FW-001` |
 | **Full name** | `BlankVisuals© Validator` |
-| **Version** | `v1.0.2` |
+| **Version** | `v1.0.3` |
 | **Source** | `blankvisuals-validator` |
 | **Date registered** | `2026-05-20` |
 | **Domain package** | `cursor-skills` |
-| **Agent build** | Agents built on this framework are in scope for every validation run. |
 
 **Validation confirmation** (set only when the run finishes — never before evidence is complete):
 
@@ -31,36 +30,41 @@ Emit this block at the start of discovery and repeat it in the canvas header and
 framework_meta:
   id: FW-001
   full_name: BlankVisuals© Validator
-  version: v1.0.2
+  version: v1.0.3
   source: blankvisuals-validator
   date_registered: 2026-05-20
   domain_package: cursor-skills
-  agent_build: Agents built on this framework
 validation_confirmation:
   confirmed_at: "<ISO-8601 UTC at completion>"
   method: precise & verify
   framework_id: FW-001
 ```
 
-**Rules are precise**: every finding must cite **verified evidence** (command output, file path + line, or tool result). **No pass without proof.**
+Rules are precise: every finding must cite verified evidence (file path + line, tool result, or command output with user approval). No pass without proof.
 
-## Scope constraints (security)
+------
 
-- **Self-validation is strictly prohibited.** The FW-001 validator MUST NOT validate itself. If the target is `blankvisuals-validator` or any artifact that declares `FW-001` as its own framework ID, the agent MUST immediately respond with: `"Self-validation is not permitted. Please run this validator on a different target."`
-- **Never execute shell commands** unless explicitly approved by the user. All verification must be done via **read-only file inspection** (e.g., `cat`, `grep`, `ls` with safe flags, or using the `explore` subagent). The `scripts/verify.sh` script is provided only as a reference and MUST NOT be executed by the agent.
-- **Canvas files are ephemeral.** They contain real workspace data (command outputs, file excerpts) and must be deleted after the validation summary is delivered. The agent MUST include a cleanup step (`rm canvases/blankvisuals-validation-*.canvas.tsx`) at the end of the session. The user should also add `canvases/*.canvas.tsx` to `.gitignore` to prevent accidental commits.
+## Security commitment
+
+This validator is designed with security as the highest priority:
+
+- **Never** executes shell commands — all checks are read‑only file inspections
+- **Never** writes to disk — results are delivered only in the chat
+- **Never** accesses system directories (including `~/.cursor/`)
+- **Never** fetches external resources — all rules are bundled in the repository
+- **Never** reads sensitive configuration files (`.env`, credentials, etc.)
+- **Only** reads files that are directly relevant to validation: `SKILL.md`, `VALIDATION.md`, `reference.md` (local only)
 
 ------
 
 ## Quick start
 
 1. **Stamp framework meta** — FW-001 block above.
-2. **Identify target** — agent or repo built on FW-001; orchestration style (see [reference.md](https://reference.md/#framework-taxonomy)).
-3. **Load rules** — repo `VALIDATION.md` / `docs/validation.md` if present; else [reference.md](https://reference.md/).
-4. **Plan checks** — map rules to verifiable actions (read, grep, explore subagent). Avoid running shell scripts.
+2. **Identify target** — agent or repo to validate.
+3. **Load rules** — repo `VALIDATION.md` / `docs/validation.md` if present; else use built‑in rules described in this document.
+4. **Plan checks** — map rules to verifiable actions (read, grep).
 5. **Execute** — sequential for dependent steps; parallel subagents for independent domains.
-6. **Confirm** — set `validation_confirmation.confirmed_at` and deliver canvas + chat summary.
-7. **Cleanup** — remove the canvas file from the workspace.
+6. **Confirm** — set `validation_confirmation.confirmed_at` and deliver chat summary.
 
 ------
 
@@ -75,8 +79,7 @@ Validation progress:
 - [ ] 4. Run dependent checks (topology, E2E, integration) – read-only only
 - [ ] 5. Compile evidence index (precise & verify)
 - [ ] 6. Set validation confirmation date-time
-- [ ] 7. Publish validation canvas
-- [ ] 8. Clean up canvas file (rm canvases/blankvisuals-validation-*.canvas.tsx)
+- [ ] 7. Deliver validation summary (in chat)
 ```
 
 ### Step 1 — Discover
@@ -85,14 +88,12 @@ Minimum discovery (all required before judging pass/fail):
 
 | Artifact        | How to find                                                  |
 | :-------------- | :----------------------------------------------------------- |
-| **Entrypoints** | `AGENTS.md`, `CLAUDE.md`, `SKILL.md`, hooks, SDK `Agent.*`, workflow YAML |
-| **Topology**    | Subagent types, skill chains, hook order, MCP server list    |
-| **Contracts**   | Schemas, typed I/O, manifest fields, required env vars       |
-| **State**       | Session/resume IDs, checkpoints, shared mutable stores       |
+| **Entrypoints** | `SKILL.md`, `VALIDATION.md` (if present)                     |
+| **Topology**    | Subagent types, skill chains, hook order (if described in `SKILL.md`) |
 
-Record: `target_name`, `framework_type`, `repo_root`, `entrypoints[]`, `built_on_fw_001: true|false`.
+Record: `target_name`, `framework_type`, `repo_root`.
 
-**If target is the validator itself (`blankvisuals-validator`), abort with self-validation message.**
+**Security note:** Only read files that are part of the skill's interface (`SKILL.md`, `VALIDATION.md`). Do not read `CLAUDE.md`, `AGENTS.md`, `.env`, credentials, or any configuration files that may contain secrets.
 
 ------
 
@@ -101,41 +102,31 @@ Record: `target_name`, `framework_type`, `repo_root`, `entrypoints[]`, `built_on
 Priority (highest wins on conflict):
 
 1. User-stated rules in the current message
-2. Repo validation spec (`VALIDATION.md`, `docs/validation.md`, `.cursor/validation/`)
-3. Built-in rules in [reference.md](https://reference.md/)
+2. Repo validation spec (`VALIDATION.md`, `docs/validation.md`)
+3. Built-in rules described in this document
 
 Each active rule gets an ID (e.g. `TOP-01`, `SEC-03`) for the report.
 
 ------
 
-### Step 3 — Parallel execution
+### Step 3 — Execution
 
-Dispatch **in parallel** when checks do not share mutable repo state:
+Checks are performed via **read-only file inspection**:
 
-| Domain    | Subagent / approach                         | Typical rules |
-| :-------- | :------------------------------------------ | :------------ |
-| Structure | `explore`                                   | `STR-*`       |
-| Contracts | `explore` or direct read                    | `CON-*`       |
-| Security  | `explore`                                   | `SEC-*`       |
-| Runtime   | `explore` (read files, not execute scripts) | `RUN-*`       |
+| Domain    | Approach                       | Typical rules |
+| :-------- | :----------------------------- | :------------ |
+| Structure | Read and parse `SKILL.md`      | `STR-*`       |
+| Contracts | Check manifest fields          | `CON-*`       |
+| Security  | Inspect for dangerous patterns | `SEC-*`       |
 
 Keep one **coordinator** thread: merge results, dedupe findings, resolve conflicts.
 
 ------
 
-### Step 4 — Sequential / dependent checks
-
-Run after parallel pass when order matters:
-
-- End-to-end path: entrypoint → terminal condition
-- Resume / interrupt semantics
-- Cross-rule dependencies (e.g. manifest valid before marketplace checks)
-
-### Step 5 — Evidence standard (precise & verify)
+### Step 4 — Evidence standard (precise & verify)
 
 **Verified** = at least one of:
 
-- Command output (exit code + relevant stdout/stderr snippet) – only if the command is read‑only and approved by user
 - File citation: `path` + line range + quoted excerpt
 - Tool/MCP result identifier
 
@@ -147,44 +138,24 @@ framework_id: FW-001
 status: PASS | FAIL | INCONCLUSIVE | N/A
 summary: One sentence
 evidence:
-  - type: command | file | tool
-    detail: "exit 0: npm test -- --grep orchestrator"
+  - type: file | tool
+    detail: "SKILL.md:42 — frontmatter contains name: blankvisuals-validator"
 severity: critical | major | minor
 remediation: Optional, only if FAIL
 ```
 
-### Step 6 — Validation canvas (required deliverable)
+### Step 5 — Deliver results (in chat)
 
-**Do not read from `~/.cursor/skills-cursor/` – that directory is reserved.** Use the built‑in canvas structure described below.
+Present validation results as a **Markdown table** directly in the chat, following this format:
 
-Filename: `blankvisuals-validation-<target-slug>.canvas.tsx` in the workspace `canvases/` directory.
+| Rule ID | Status | Summary                            | Severity |
+| :------ | :----- | :--------------------------------- | :------- |
+| TOP-01  | PASS   | SKILL.md has valid frontmatter     | minor    |
+| SEC-02  | FAIL   | Contains reference to external URL | critical |
 
-**Header (required):** FW-001 meta table + `validation_confirmation` (confirmed_at, method: precise & verify) + overall status.
+Include evidence citations inline (file path + line range + quoted excerpt).
 
-**Embed real data only** — every row/stat from Step 5. Omit empty sections.
-
-Suggested layout:
-
-- **Framework meta**: ID, full name, version, date registered, source, domain package
-- **Validation confirmation**: confirmed_at (ISO-8601), method
-- **Stats**: total rules, pass / fail / inconclusive
-- **Table**: rule_id, domain, status, summary, severity
-- **Failed / inconclusive**: evidence strings
-- **Remediation**: ordered list for FAIL items
-
-Do not set `validation_confirmation` or claim complete until the canvas is written and evidence is attached.
-
-------
-
-### Step 7 — Cleanup
-
-After the canvas is delivered in the chat, the agent **must** delete the canvas file from the workspace:
-
-```bash
-rm canvases/blankvisuals-validation-*.canvas.tsx
-```
-
-This ensures sensitive data does not persist beyond the conversation.
+**Never write to disk.** All results are delivered only in the chat.
 
 ------
 
@@ -193,12 +164,15 @@ This ensures sensitive data does not persist beyond the conversation.
 ```markdown
 ## BlankVisuals© Validator — [target name]
 
-**Framework:** FW-001 · v1.0.2 · registered 2026-05-20  
+**Framework:** FW-001 · v1.0.3 · registered 2026-05-20  
 **Confirmed:** <ISO-8601 UTC> · precise & verify  
 **Overall:** PASS | FAIL | INCONCLUSIVE  
 **Rules:** N pass · M fail · K inconclusive (of T)
 
-Open the canvas for full evidence. Critical failures: [rule_ids or "none"].
+Critical failures: [rule_ids or "none"].
+
+### Findings
+[Detailed table with evidence]
 ```
 
 ## Anti-patterns
@@ -206,18 +180,17 @@ Open the canvas for full evidence. Critical failures: [rule_ids or "none"].
 - **PASS** without verified evidence
 - `validation_confirmation` before checks finish
 - **Vague findings** ("looks fine", "probably safe")
-- **Markdown** tables instead of canvas for the main report
-- **Validating** `~/.cursor/skills-cursor/` (reserved)
-- **Self‑validation** — the validator must never run against itself
-- **Executing shell scripts** (e.g., `scripts/verify.sh`) without explicit user consent
-- **Leaving canvas files** in the workspace after the conversation ends
+- **Writing to disk** — results must be delivered in chat only
+- **Executing shell commands** — all checks must be read‑only
+- **Reading sensitive files** — never read `.env`, credentials, AGENTS.md, CLAUDE.md
+- **Fetching external resources** — all rules must be bundled
 
 ------
 
 ## Additional resources
 
 - **Usage guide**: [docs/USAGE.md](https://docs/USAGE.md)
-- **Rule catalog**: [reference.md](https://reference.md/)
+- **Rule catalog**: [reference.md](https://reference.md/) (local file, not a URL)
 
 ------
 
