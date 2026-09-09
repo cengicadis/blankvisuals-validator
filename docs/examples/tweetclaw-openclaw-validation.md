@@ -18,7 +18,7 @@ as the source of truth for each run.
 ## Framework
 id: FW-001
 name: BlankVisuals© Validator
-version: v1.0.2
+version: v1.0.3
 type: mcp-orchestration
 source: @xquik/tweetclaw
 domain_package: openclaw-plugin
