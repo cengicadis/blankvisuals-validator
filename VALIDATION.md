@@ -5,7 +5,7 @@
 ```yaml
 id: FW-001
 name: BlankVisuals© Validator
-version: v1.0.2
+version: v1.0.3
 type: skill-chain
 source: blankvisuals-validator
 domain_package: cursor-skills
